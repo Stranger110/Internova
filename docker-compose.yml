@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  internova:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: internova:latest
+    container_name: internova-ground-station
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ID=internova-primary-node
+      - HOST=0.0.0.0
+      - PORT=8000
+      - SATELLITE_DATA_DIR=/app/data
+      - FRONTEND_DIR=/app/frontend
+    volumes:
+      # Persistent cache for TLE orbital data & satellite imagery buffers
+      - internova_data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1536M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  internova_data:
+    name: internova_satellite_cache
+    driver: local

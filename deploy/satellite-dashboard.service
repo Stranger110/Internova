@@ -1,0 +1,21 @@
+[Unit]
+Description=High-Availability Satellite Ground Station Dashboard Daemon
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/satellite-dashboard/backend
+ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3s
+Environment=PYTHONUNBUFFERED=1
+Environment=NODE_ID=linux-sat-node-systemd
+LimitNOFILE=65535
+
+# Systemd Watchdog Support
+WatchdogSec=15s
+
+[Install]
+WantedBy=multi-user.target

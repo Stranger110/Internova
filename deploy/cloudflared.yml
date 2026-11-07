@@ -1,0 +1,21 @@
+# Cloudflare Tunnel High-Availability Configuration
+# Deploy this on multiple Linux servers pointing to the same tunnel ID
+# Cloudflare automatically balances traffic and fails over in < 3s if one server stops responding.
+
+tunnel: YOUR_TUNNEL_UUID_HERE
+credentials-file: /etc/cloudflared/YOUR_TUNNEL_UUID_HERE.json
+
+ingress:
+  # Route traffic to the local satellite dashboard node
+  - hostname: sat.yourdomain.com
+    service: http://localhost:8000
+    originRequest:
+      connectTimeout: 5s
+      noTLSVerify: false
+
+  # Healthcheck probe endpoint used by Cloudflare Load Balancing
+  - hostname: sat-health.yourdomain.com
+    service: http://localhost:8000/healthz
+
+  # Catch-all rule
+  - service: http_status:404

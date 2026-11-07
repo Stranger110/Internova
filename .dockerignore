@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE & OS files
+.git/
+.gitignore
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test & coverage caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local cache data (will use docker volume instead)
+backend/data/cache/
+data/cache/
